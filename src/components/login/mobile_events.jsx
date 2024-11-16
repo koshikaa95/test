@@ -19,6 +19,8 @@ export function MobileEvents(){
         setpreview(e.target.src);
     }
 
+    //testing github
+
     return(
         <div className="row mt-2">
             <div className="col-2">
