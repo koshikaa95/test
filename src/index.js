@@ -1,13 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { Login } from '../src/components/login/login';
+import  '../node_modules/bootstrap-icons/font/bootstrap-icons.css';
+import  '../node_modules/bootstrap/dist/css/bootstrap.css';
+import {Databinding} from './components/login/databinding';
+//import Sample from './components/login/sample';
+//import MountDemo from './components/login/mountdemo';
+import {Fakestore} from './components/login/fakestore';
+import { MobileEvents } from './components/login/mobile_events';
+import {ButtonEvents} from './components/login/buttonevents';
+import {ElementState} from './components/login/elementevents';
+import {SlideEvents} from './components/login/slideevents';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <SlideEvents />
   </React.StrictMode>
 );
 
