@@ -52,6 +52,7 @@ export function SlideEvents() {
     LoadProducts(1);
   },[]);
 
+  //test
   return (
     <div className="container-fluid text-center d-flex justify-content-center">
       <div className="card w-50 mt-4 row">
