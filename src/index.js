@@ -13,11 +13,13 @@ import { MobileEvents } from './components/login/mobile_events';
 import {ButtonEvents} from './components/login/buttonevents';
 import {ElementState} from './components/login/elementevents';
 import {SlideEvents} from './components/login/slideevents';
+import {FormikDemo} from './components/login/formikdemo';
+import {FormikState} from './components/login/formik';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <SlideEvents />
+    <FormikState />
   </React.StrictMode>
 );
 

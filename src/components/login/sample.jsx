@@ -1,144 +1,55 @@
-import axios from "axios";
-import { useEffect, useState } from "react"
+import { useFormik, Formik, Form, Field, ErrorMessage } from "formik";
+import * as yup from "yup";
 
-export default function Sample()
-{
-    const [categories, setCategories] = useState([]);
-    const [products, setProducts] = useState([{id:0, title:'', price:0, description:'', image:'', category:'', rating:{rate:0, count:0}}])
-    const [cartItems, setCartItems] = useState([]);
-    const [cartCount, setCartCount] = useState(0);
+
+export function FormikDemo(){
+
    
 
-    function LoadCategories(){
-        axios.get('https://fakestoreapi.com/products/categories')
-        .then(response=>{
-            response.data.unshift("all");
-            setCategories(response.data);
-        })
-    }
-    function LoadProducts(url){
-        axios.get(url)
-        .then(response=>{
-            setProducts(response.data);
-        })
-    }
-
-    useEffect(()=>{
-
-        LoadCategories();
-        LoadProducts('https://fakestoreapi.com/products');
-
-    },[])
-
-    function handleCategoryChange(e){
-        if(e.target.value==='all') {
-            LoadProducts('https://fakestoreapi.com/products');
-        } else {
-            LoadProducts(`https://fakestoreapi.com/products/category/${e.target.value}`);
-        }
-    }
-   
-
-    function GetCartCount() {
-        setCartCount(cartItems.length);
-    }
-
-    function handleAddToCartClick(product){
-        cartItems.push(product);
-        alert(`${product.title}\nAdded to Cart`);
-        GetCartCount();
-    }
-    function handleRemoveClick(index){
-        cartItems.splice(index,1);
-    }
-
-     return(
+    return(
         <div className="container-fluid">
-            <header className="d-flex bg-dark text-white justify-content-between p-1 border border-2 mt-2">
-                <h2>Fakestore</h2>
-                <div className="fs-5">
-                    <span className="me-2"> Home </span>
-                    <span className="me-2"> Electronics </span>
-                    <span className="me-2"> Men's Fashion </span>
-                    <span className="me-2"> Women's Fashion </span>
-                    <span className="me-2"> Jewelery </span>
-                </div>
-                <div>
-                    <span className="bi bi-heart-fill me-3"></span>
-                    <span className="bi bi-person-fill me-3"></span>
-                    <button data-bs-target="#Cart" data-bs-toggle="modal" className="btn btn-warning bi bi-cart4 position-relative"> <span className="badge bg-danger position-absolute rounded rounded-circle"> {cartCount} </span> </button>
-                    <div className="modal fade" id="Cart">
-                      <div className="modal-dialog modal-dialog-centered">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h2 className="text-primary">Your Cart Items</h2>
-                                <button className="btn btn-close" data-bs-dismiss="modal"></button>
-                            </div>
-                            <div className="modal-body">
-                                <table className="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Title</th>
-                                            <th>Price</th>
-                                            <th>Preview</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {
-                                            cartItems.map((item,index)=>
-                                                <tr key={item.id}>
-                                                    <td>{item.title}</td>
-                                                    <td>{item.price}</td>
-                                                    <td> <img src={item.image} width="50" height="50" /> </td>
-                                                    <td> <button onClick={()=>{handleRemoveClick(index)}} className="btn btn-danger bi bi-trash"></button> </td>
-                                                </tr>
-                                                )
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                      </div>
-                    </div>
-                </div>
-            </header>
-            <section className="mt-4 row">
-                <nav className="col-2">
-                   <div>
-                     <label className="form-label fw-bold">Select Category</label>
-                     <div>
-                        <select className="form-select" onChange={handleCategoryChange}>
-                          {
-                            categories.map(category=><option value={category} key={category}> {category.toUpperCase()} </option>)
-                          }
-                        </select>
-                     </div>
-                   </div>
-                </nav>
-                <main className="col-10 d-flex flex-wrap overflow-auto" style={{height:'500px'}}>
-                   {
-                      products.map(product=>
-                         <div key={product.id} className="card m-2 p-2" style={{width:'200px'}}>
-                             <img src={product.image} className="card-img-top" height="120"/>
-                             <div className="card-header" style={{height:'90px'}}>
-                                {product.title}
-                             </div>
-                             <div className="card-body">
-                                <dl>
-                                    <dt>Price</dt>
-                                    <dd>{product.price}</dd>
-                                    <dt>Rating</dt>
-                                    <dd> {product.rating.rate} <span className="bi bi-star-fill text-success"></span> </dd>
-                                </dl>
-                             </div>
-                             <div className="card-footer">
-                                <button onClick={()=>{handleAddToCartClick(product)}} className="btn bi bi-cart4 btn-dark w-100"> Add to Cart </button>
-                             </div>
-                         </div>
-                        )
-                   }
-                </main>
-            </section>
+            <h2>Register User</h2>
+            <Formik
+              initialValues={{UserName:'', Mobile:'', Age:0, City:''}}
+
+              validationSchema={yup.object({
+                  UserName: yup.string().required('Name Required').min(4, 'Name too short'),
+                  Mobile: yup.string().required('Mobile Required').matches(/\+91\d{10}/,'Invalid Mobile'),
+                  Age: yup.number().required('Age Required').min(15, 'Age min 15').max(30, 'Age max 30')
+              })}
+
+              onSubmit={(userDetails)=>{console.log(userDetails)}}
+            >
+               
+                {
+                    formik =>
+                    <Form>
+                    <dl>
+                        <dt>User Name</dt>
+                        <dd> <Field type="text" name="UserName" /> </dd>
+                        <dd className="text-danger"> <ErrorMessage name="UserName" /> </dd>
+                        <dt>Mobile</dt>
+                        <dd> <Field type="text" name="Mobile" /> </dd>
+                        <dd className="text-danger"> <ErrorMessage name="Mobile" /> </dd>
+                        <dt>Age</dt>
+                        <dd> <Field type="number" name="Age" /> </dd>
+                        <dd className="text-danger"> <ErrorMessage name="Age" /> </dd>
+                        <dt>City</dt>
+                        <dd>
+                          <Field as="select" name="City">
+                            <option>Select City</option>
+                            <option>Delhi</option>
+                            <option>Hyd</option>
+                          </Field>
+                        </dd>
+                    </dl>
+                    <button disabled={!formik.isValid} type="submit"> Register </button>
+                    <button style={{display:(formik.dirty)?'inline':'none'}} type="button" className="ms-3"> Save </button>
+                </Form>
+                   
+                }
+            </Formik>
+           
         </div>
-     )
+    )
 }
